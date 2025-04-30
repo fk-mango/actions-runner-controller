@@ -38,6 +38,13 @@ jobs:
       - name: setup-helm
         uses: azure/setup-helm@v4
 
+      - name: Helm Install GHA RSS Controller
+        run: |
+          helm install gha-rss-controller \
+            --namespace ${{ vars.GHA_RSS_CONTROLLER_NAMESPACE }} \
+            --create-namespace \
+            ./charts/gha-runner-scale-set-controller
+
 #      - name: Configure Deployment
 #        id: configure-deployment
 #        uses: azure/k8s-bake@v3
