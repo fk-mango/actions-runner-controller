@@ -23,7 +23,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Setup kubectl
-        uses: azure/setup-kubectl@v2
+        uses: azure/setup-kubectl@v4
 
       # set the target AKS Cluster
       - name: Get K8s context
