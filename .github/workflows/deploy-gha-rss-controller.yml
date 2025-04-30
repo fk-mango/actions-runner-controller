@@ -1,0 +1,51 @@
+name: Helm Deploy GHA RSS Controller
+
+on:
+  workflow_dispatch
+
+
+jobs:
+
+  deploy-to-aks:
+
+    name: Deploy to AKS
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v2
+
+      # set the target AKS Cluster
+      - name: Get K8s context
+        uses: azure/aks-set-context@v4
+        with:
+          resource-group: ${{ secrets.AKS_RESOURCE_GROUP }}
+          cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
+
+      - name: setup-helm
+        uses: azure/setup-helm@v4
+
+#      - name: Configure Deployment
+#        id: configure-deployment
+#        uses: azure/k8s-bake@v3
+#        with:
+#          render-engine: helm
+#          helm-chart-path: ./charts/gha-runner-scale-set-controller
+#          helm-version: latest
+#
+#      - name: Deploy to AKS
+#        uses: azure/k8s-deploy@v5
+#        with:
+#          namespace: ${{ vars.GHA_RSS_CONTROLLER_NAMESPACE }}
+#          manifest: ${{ steps.configure-deployment.outputs.manifestBundle }}
+#          action: deploy
